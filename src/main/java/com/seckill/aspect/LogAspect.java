@@ -16,7 +16,7 @@ public class LogAspect {
 
     private static final Logger log = LoggerFactory.getLogger(LogAspect.class);
 
-    @Pointcut("execution(* com.shreyryan.seckill.controller..*.*(..))")
+    @Pointcut("execution(* com.seckill.controller..*.*(..))")
     public void controllerPointcut() {
     }
 
