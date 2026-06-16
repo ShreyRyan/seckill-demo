@@ -1,0 +1,19 @@
+### IDEA ###
+.idea/
+*.iml
+*.iws
+
+### Maven ###
+target/
+logs/
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Logs ###
+*.log
+
+### Temp ###
+*.tmp
+*.bak

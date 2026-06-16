@@ -1,0 +1,46 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: seckill-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: seckill
+      TZ: Asia/Shanghai
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  redis:
+    image: redis:7-alpine
+    container_name: seckill-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass redis123
+
+  rocketmq-namesrv:
+    image: apache/rocketmq:5.2.0
+    container_name: seckill-rmq-namesrv
+    ports:
+      - "9876:9876"
+    environment:
+      JAVA_OPT_EXT: "-Xms256m -Xmx256m"
+    command: sh mqnamesrv
+
+  rocketmq-broker:
+    image: apache/rocketmq:5.2.0
+    container_name: seckill-rmq-broker
+    ports:
+      - "10911:10911"
+      - "10909:10909"
+    environment:
+      NAMESRV_ADDR: rocketmq-namesrv:9876
+      JAVA_OPT_EXT: "-Xms512m -Xmx512m -Drocketmq.broker.diskSpaceWarningLevelRatio=0.98"
+    command: sh mqbroker -n rocketmq-namesrv:9876 -c /home/rocketmq/rocketmq-5.2.0/conf/broker.conf
+    volumes:
+      - ./broker.conf:/home/rocketmq/rocketmq-5.2.0/conf/broker.conf
+    depends_on:
+      - rocketmq-namesrv
+
+volumes:
+  mysql-data:
